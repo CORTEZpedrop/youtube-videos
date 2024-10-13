@@ -51,8 +51,6 @@ const DataGrid: React.FC<DataGridProps> = ({ videos }) => {
   };
 
   const handleDelete = () => async () => {
-    // Implementar a deleção do vídeo
-    alert("Deletando vídeo: " + idDelete);
     const deleteVideo = await axios.post("/api/deleteVideo", {
       idDelete: idDelete,
     });
