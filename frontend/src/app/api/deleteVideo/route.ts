@@ -6,19 +6,19 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export async function POST(req: Request, res: NextApiResponse) {
-  const { id } = await req.json();
+  const { idDelete } = await req.json();
 
   //   const session = await getServerSession(authOption);
   //   const authToken = session?.accessToken;
   //   const user = session?.user?.name;
 
   try {
-    if (!id) {
+    if (!idDelete) {
       throw new Error("sem vídeo");
     }
 
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_ENDPOINT_BACKEND}urls/${id}`,
+    const response = await axios.delete(
+      `${process.env.NEXT_PUBLIC_ENDPOINT_BACKEND}urls/${idDelete}`,
       {
         headers: {
           //   Authorization: `Bearer ${authToken}`,
