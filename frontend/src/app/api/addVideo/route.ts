@@ -2,7 +2,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 // import { getServerSession } from "next-auth";
 // import { authOption } from "../auth/[...nextauth]/authOptions";
 import axios from "axios";
-import { time } from "console";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
@@ -21,18 +20,20 @@ export async function POST(req: Request, res: NextApiResponse) {
     let timestamp = new Date().toISOString();
 
     const body = {
-      description,
-      url,
-      user,
-      timestamp,
+      description: description,
+      url: url,
+      updated_by: user,
+      updated_at: timestamp,
     };
 
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_ENDPOINT_BACKEND}create/equipments`,
+      `${process.env.NEXT_PUBLIC_ENDPOINT_BACKEND}urls`,
       body,
       {
         headers: {
           //   Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
         },
       }
     );
@@ -42,15 +43,16 @@ export async function POST(req: Request, res: NextApiResponse) {
         status: 200,
       });
     } else {
-      return new Response("No good bro", {
-        status: 400,
+      console.error(response);
+      return new Response("Erro no cadastro", {
+        status: 500,
       });
     }
   } catch (error) {
     console.error(error);
 
     return new Response("Failed", {
-      status: 400,
+      status: 500,
     });
   }
 }
