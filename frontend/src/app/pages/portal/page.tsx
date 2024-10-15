@@ -15,18 +15,30 @@ interface Video {
 }
 
 async function getProps() {
-  const response = await axios.get(
-    `${process.env.NEXT_PUBLIC_ENDPOINT_BACKEND}urls`
-  );
-  if (response.status != 200) {
-    console.log(`Erro na requisição: ${response.statusText}`);
-    redirect("/");
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_ENDPOINT_BACKEND}urls`
+    );
+    // const response = await axios.get(
+    //   `${process.env.NEXT_PUBLIC_ENDPOINT_BACKEND}urls`
+    // );
+    if (!response.ok) {
+      console.log(`Erro na requisição: ${response.statusText}`);
+      // redirect("/");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Erro ao obter dados do BFF:", error);
+    return {
+      props: null,
+    };
   }
-  return response.data;
 }
 
 export default async function Portal() {
   const props = await getProps();
+  if (!props) return <div>Carregando...</div>;
   return (
     <div
       style={{
