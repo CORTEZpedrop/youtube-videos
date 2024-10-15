@@ -5,3 +5,9 @@
 // const handler = NextAuth(authOption);
 
 // export { handler as GET, handler as POST };
+
+export async function GET(request: Request) {
+  return new Response("Hello, Next.js!", {
+    status: 200,
+  });
+}
