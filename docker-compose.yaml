@@ -1,0 +1,29 @@
+version: '3.3'
+
+services:
+  fastapi:
+    build:
+      context: ./backend  # Path to your FastAPI app
+    container_name: fastapi-app
+    ports:
+      - "8000:8000"  # Expose FastAPI on port 8000
+    networks:
+      - app-network
+    environment:
+      - DATABASE_URL=sqlite:///./youtube.db  # Example environment variable
+
+  nextjs:
+    build:
+      context: ./frontend  # Path to your Next.js app
+    container_name: nextjs-app
+    ports:
+      - "3001:3000"  # Expose Next.js on port 3000
+    networks:
+      - app-network
+    environment:
+      - NEXT_PUBLIC_ENDPOINT_BACKEND=http://fastapi:8000/  # Use FastAPI service name
+      - NODE_ENV=production
+
+networks:
+  app-network:
+    driver: bridge

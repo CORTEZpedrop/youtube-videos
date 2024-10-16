@@ -1,0 +1,38 @@
+steps:
+  # Step 1: Build the Docker image
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["build", "-t", "gcr.io/$PROJECT_ID/fastapi-backend", "."]
+
+  # Step 2: Push the Docker image to Google Container Registry (GCR)
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/$PROJECT_ID/fastapi-backend"]
+
+  # Step 3: Deploy the image to Cloud Run
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: "gcloud"
+    args:
+      [
+        "run",
+        "deploy",
+        "fastapi-backend",
+        "--image",
+        "gcr.io/$PROJECT_ID/fastapi-backend",
+        "--platform",
+        "managed",
+        "--region",
+        "us-central1",
+        "--port",
+        "8000",
+        "--min-instances=1",
+        "--max-instances=5",
+        "--cpu=1",
+        "--memory=1Gi",
+        "--concurrency=20",
+        "--cpu-boost",
+        "--execution-environment=gen1",
+        "--cpu-throttling",
+      ]
+
+# Define the images to be pushed to Google Container Registry
+images:
+  - "gcr.io/$PROJECT_ID/fastapi-backend"

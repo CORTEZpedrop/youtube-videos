@@ -5,6 +5,8 @@ import MyBreadcrumbs from "@/app/components/atoms/breadbCrumb/BreadCrumb";
 import { redirect } from "next/navigation";
 import DataGrid from "@/app/components/Molecules/dataGrid/dataGrid";
 import AddVideo from "@/app/components/Molecules/addVideo/addVideo";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 interface Video {
   id: string;
@@ -16,6 +18,12 @@ interface Video {
 
 async function getProps() {
   try {
+    console.log(
+      "process.env.NEXT_PUBLIC_ENDPOINT_BACKEND",
+      process.env.NEXT_PUBLIC_ENDPOINT_BACKEND
+    );
+
+    console.log(process.env.NODE_ENV);
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_ENDPOINT_BACKEND}urls`
     );
@@ -38,7 +46,7 @@ async function getProps() {
 
 export default async function Portal() {
   const props = await getProps();
-  if (!props) return <div>Carregando...</div>;
+  console.log("props", props);
   return (
     <div
       style={{

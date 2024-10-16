@@ -1,0 +1,54 @@
+steps:
+  - id: "Installing Packages in Workspace"
+    dir: "frontend/"
+    name: node:18
+    entrypoint: yarn
+    args:
+      - "install"
+
+  - id: "Build"
+    dir: "frontend/"
+    name: "gcr.io/cloud-builders/docker"
+    entrypoint: docker
+    args:
+      [
+        "build",
+        "--no-cache",
+        "-t",
+        "us.gcr.io/$PROJECT_ID/frontend-next-js:$REVISION_ID",
+        "-f",
+        "Dockerfile",
+        ".",
+      ]
+
+  - id: "Push"
+    dir: "frontend/"
+    name: "gcr.io/cloud-builders/docker"
+    entrypoint: docker
+    args: ["push", "us.gcr.io/$PROJECT_ID/frontend-next-js:$REVISION_ID"]
+
+  - id: "Deploy"
+    dir: "frontend/"
+    name: "gcr.io/cloud-builders/gcloud"
+    entrypoint: gcloud
+    args:
+      [
+        "run",
+        "deploy",
+        "frontend-nextjs",
+        "--platform=managed",
+        "--allow-unauthenticated",
+        "--image=us.gcr.io/$PROJECT_ID/frontend-next-js:$REVISION_ID",
+        "--region=us-central1",
+        "--min-instances=0",
+        "--cpu=2",
+        "--memory=2048Mi",
+        "--concurrency=100",
+        "--cpu-boost",
+        "--execution-environment=gen1",
+        "--cpu-throttling",
+      ]
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+timeout: 1200s

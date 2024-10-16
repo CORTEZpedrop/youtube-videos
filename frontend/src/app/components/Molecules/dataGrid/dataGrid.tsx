@@ -85,97 +85,105 @@ const DataGrid: React.FC<DataGridProps> = ({ videos }) => {
         boxSizing: "border-box",
       }}
     >
-      {videos.map((video: Video) => {
-        const videoId = getYouTubeVideoId(video.url);
-        const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+      {videos &&
+        videos.map((video: Video) => {
+          const videoId = getYouTubeVideoId(video.url);
+          const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
 
-        return (
-          <div
-            key={video.id}
-            style={{
-              border: "1px solid #ccc",
-              padding: "16px",
-              borderRadius: "8px",
-              boxShadow: "24",
-              textAlign: "center",
-              position: "relative",
-              maxWidth: "100%",
-            }}
-          >
-            {selectedVideo === videoId ? (
-              // Embed do vídeo do YouTube quando clicado
-              <>
-                <iframe
-                  width="100%"
-                  height="200px"
-                  src={`https://www.youtube.com/embed/${videoId}`}
-                  title={video.description}
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  style={{
-                    maxWidth: "100%",
-                    maxHeight: "200px",
-                  }}
-                ></iframe>
-                <Typography variant="h6">{video.description}</Typography>
-                <Typography variant="subtitle1">
-                  {"Adicionado por: "} {video.updated_by}
-                </Typography>
-              </>
-            ) : (
-              // Exibe a miniatura
-              <>
-                <img
-                  src={thumbnailUrl}
-                  alt={video.description}
-                  style={{
-                    width: "100%",
-                    height: "200px",
-                    cursor: "pointer",
-                    borderRadius: "8px",
-                    objectFit: "cover",
-                  }}
-                  onClick={() => setSelectedVideo(videoId)}
-                />
-                <Box
-                  style={{
-                    fontSize: "16px",
-                    margin: "8px 0",
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                >
+          return (
+            <div
+              key={video.id}
+              style={{
+                border: "1px solid #ccc",
+                padding: "16px",
+                borderRadius: "8px",
+                boxShadow: "24",
+                textAlign: "center",
+                position: "relative",
+                maxWidth: "100%",
+              }}
+            >
+              {selectedVideo === videoId ? (
+                // Embed do vídeo do YouTube quando clicado
+                <>
+                  <iframe
+                    width="100%"
+                    height="200px"
+                    src={`https://www.youtube.com/embed/${videoId}`}
+                    title={video.description}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    style={{
+                      maxWidth: "100%",
+                      maxHeight: "200px",
+                    }}
+                  ></iframe>
                   <Typography variant="h6">{video.description}</Typography>
-                  <Typography variant="subtitle1" sx={{ marginBottom: "10px" }}>
+                  <Typography variant="subtitle1">
                     {"Adicionado por: "} {video.updated_by}
                   </Typography>
+                </>
+              ) : (
+                // Exibe a miniatura
+                <>
+                  <img
+                    src={thumbnailUrl}
+                    alt={video.description}
+                    style={{
+                      width: "100%",
+                      height: "200px",
+                      cursor: "pointer",
+                      borderRadius: "8px",
+                      objectFit: "cover",
+                    }}
+                    onClick={() => setSelectedVideo(videoId)}
+                  />
                   <Box
-                    sx={{ position: "absolute", bottom: "-1px", right: "16px" }}
+                    style={{
+                      fontSize: "16px",
+                      margin: "8px 0",
+                      whiteSpace: "nowrap",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    }}
                   >
-                    <IconButton
-                      onClick={() => {
-                        setOpenDetails(true);
-                        setUrlDetails(
-                          `https://www.youtube.com/embed/${videoId}`
-                        );
-                        setSelectedVideo(null);
+                    <Typography variant="h6">{video.description}</Typography>
+                    <Typography
+                      variant="subtitle1"
+                      sx={{ marginBottom: "10px" }}
+                    >
+                      {"Adicionado por: "} {video.updated_by}
+                    </Typography>
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        bottom: "-1px",
+                        right: "16px",
                       }}
                     >
-                      <AspectRatioIcon />
-                    </IconButton>
+                      <IconButton
+                        onClick={() => {
+                          setOpenDetails(true);
+                          setUrlDetails(
+                            `https://www.youtube.com/embed/${videoId}`
+                          );
+                          setSelectedVideo(null);
+                        }}
+                      >
+                        <AspectRatioIcon />
+                      </IconButton>
 
-                    <IconButton onClick={() => handleOpenDeletion(video.id)}>
-                      <DeleteForeverIcon />
-                    </IconButton>
+                      <IconButton onClick={() => handleOpenDeletion(video.id)}>
+                        <DeleteForeverIcon />
+                      </IconButton>
+                    </Box>
                   </Box>
-                </Box>
-              </>
-            )}
-          </div>
-        );
-      })}
+                </>
+              )}
+            </div>
+          );
+        })}
       <Dialog open={openDeletion} onClose={() => setOpenDeletion(false)}>
         <Box
           style={{

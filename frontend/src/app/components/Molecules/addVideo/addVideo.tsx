@@ -29,6 +29,8 @@ const AddVideo: React.FC = () => {
     setOpen(true);
   };
 
+  console.log(process.env.NEXT_PUBLIC_ENDPOINT_BACKEND);
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -109,7 +111,7 @@ const AddVideo: React.FC = () => {
               onChange={(e) => setDescription(e.target.value)}
             />
             <TextField
-              label="User"
+              label="Seu Nome"
               variant="outlined"
               fullWidth
               value={user}
